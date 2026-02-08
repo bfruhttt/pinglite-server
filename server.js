@@ -1,39 +1,22 @@
-const WebSocket = require("ws");
+const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 3000 });
-const clients = {};
+const port = process.env.PORT || 3000;
+const wss = new WebSocket.Server({ port });
 
-wss.on("connection", ws => {
-  ws.on("message", msg => {
-    let data;
-    try {
-      data = JSON.parse(msg);
-    } catch {
-      return;
-    }
+console.log(`PingLite server running on port ${port}`);
 
-    if (data.type === "register") {
-      clients[data.id] = ws;
-      console.log("Registered:", data.id);
-      return;
-    }
+wss.on('connection', (ws) => {
+    console.log('New client connected');
 
-    if (data.type === "message") {
-      const target = clients[data.to];
-      if (target) {
-        target.send(JSON.stringify({
-          from: data.from,
-          text: data.text
-        }));
-      }
-    }
-  });
+    ws.on('message', (message) => {
+        console.log(`Received: ${message}`);
+        // أرسل الرسالة لكل المتصلين
+        wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(message);
+            }
+        });
+    });
 
-  ws.on("close", () => {
-    for (const id in clients) {
-      if (clients[id] === ws) delete clients[id];
-    }
-  });
+    ws.on('close', () => console.log('Client disconnected'));
 });
-
-console.log("PingLite server running on port 3000");
