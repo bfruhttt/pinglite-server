@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ping Lite</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <span>Ping Lite</span>
+    <button id="searchBtn" onclick="openSearch()">🔍</button>
+  </div>
+
+  <div id="searchArea" style="display:none; margin:10px;">
+    <input id="friendID" type="text" placeholder="أدخل ID صديقك">
+    <button onclick="addFriend()">إضافة</button>
+  </div>
+
+  <div id="messages" class="messages"></div>
+
+  <div class="input-area">
+    <input id="messageInput" type="text" placeholder="اكتب رسالة">
+    <button onclick="sendMessage()">إرسال</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
